@@ -1,0 +1,141 @@
+{
+  "$id": "https://schemas.bench.ci/report/1.0.0/schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Bench Report",
+  "description": "JSON Schema for Bench CI reports",
+  "definitions": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "commit",
+    "environments",
+    "jobs",
+    "results"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "$id": "#/properties/version",
+      "title": "Schema Version",
+      "description": "Used to determine what Bench Report Schema to validate against",
+      "type": "string",
+      "pattern": "\\bv?(?:0|[1-9]\\d*)\\.(?:0|[1-9]\\d*)\\.(?:0|[1-9]\\d*)(?:-[\\da-z-]+(?:\\.[\\da-z-]+)*)?(?:\\+[\\da-z-]+(?:\\.[\\da-z-]+)*)?\\b"
+    },
+    "environments": {
+      "$id": "#/properties/environments",
+      "title": "Environments",
+      "description": "List of Environments used",
+      "$ref": "https://schemas.bench.ci/environments/1.0.0/schema.json#/properties/environments"
+    },
+    "jobs": {
+      "$id": "#/properties/jobs",
+      "title": "Jobs",
+      "description": "List of Jobs executed",
+      "$ref": "https://schemas.bench.ci/bench/1.0.0/schema.json#/properties/jobs"
+    },
+    "commit": {
+      "$id": "#/properties/commit",
+      "title": "Commit",
+      "description": "Commit information",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "time"
+      ],
+      "properties": {
+        "id": {
+          "$id": "#/properties/commit/properties/id",
+          "title": "Commit ID",
+          "description": "Commit unique identifier",
+          "$ref": "#/definitions/nonEmptyString"
+        },
+        "time": {
+          "$id": "#/properties/commit/properties/time",
+          "title": "Commit Time",
+          "description": "Date & Time of commit",
+          "allOf": [
+            { "$ref": "#/definitions/nonEmptyString" },
+            { "format": "date-time" }
+          ]
+        }
+      }
+    },
+    "results": {
+      "$id": "#/properties/results",
+      "title": "Bench Results",
+      "description": "Benchmark results array",
+      "type": "array",
+      "items": {
+        "$id": "#/properties/results/items",
+        "title": "Bench Result",
+        "description": "A single benchmark result object",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "job": {
+            "$id": "#/properties/results/items/job",
+            "title": "Job ID",
+            "description": "Job ID or name reference",
+            "$ref": "https://schemas.bench.ci/bench/1.0.0/schema.json#/properties/jobs/items/name"
+          },
+          "environment": {
+            "$id": "#/properties/results/items/environment",
+            "title": "Environment ID",
+            "description": "Environment ID or name reference",
+            "$ref": "https://schemas.bench.ci/environments/1.0.0/schema.json#/properties/environments/items/name"
+          },
+          "operations": {
+            "$id": "#/properties/results/items/operations",
+            "title": "Result Operations Count",
+            "description": "number of operations executed per second",
+            "type": "integer",
+            "minimum": 0
+          },
+          "timings": {
+            "$id": "#/properties/results/items/timings",
+            "title": "Result Timings",
+            "description": "Timings Object",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "time",
+              "elapsed"
+            ],
+            "properties": {
+              "time": {
+                "$id": "#/properties/results/items/timings/properties/time",
+                "title": "Timestamp",
+                "description": "A timestamp of when the benchmark started (milliseconds)",
+                "type": "integer",
+                "minimum": 0
+              },
+              "elapsed": {
+                "$id": "#/properties/results/items/timings/properties/elapsed",
+                "title": "Time Elapsed",
+                "description": "The time taken to complete the benchmark (milliseconds)",
+                "type": "integer",
+                "minimum": 0
+              },
+              "period": {
+                "$id": "#/properties/results/items/timings/properties/period",
+                "title": "Time Period",
+                "description": "The time taken to execute the test once (milliseconds)",
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

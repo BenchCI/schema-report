@@ -1,0 +1,35 @@
+{
+  "$schema": "../../spec/latest/schema.json",
+  "version": "1.0.0",
+  "commit": {
+    "id": "7cd9055",
+    "time": "2018-02-26T00:52:01.158Z"
+  },
+  "environments": [
+    {
+      "name": "ubuntu:16.04",
+      "os": {
+        "name": "ubuntu",
+        "version": "16.04"
+      }
+    }
+  ],
+  "jobs": [
+    {
+      "name": "performance",
+      "benchmark": "node bench/performance.js"
+    }
+  ],
+  "results": [
+    {
+      "job": "performance",
+      "environment": "ubuntu:16.04",
+      "operations": 10,
+      "timings": {
+        "elapsed": 20000,
+        "period": 200,
+        "time": 200
+      }
+    }
+  ]
+}
